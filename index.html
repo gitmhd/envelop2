@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Luxury Envelope Card Reveal</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        font-family: "Poppins", sans-serif;
+        overflow: hidden;
+        padding: 20px;
+      }
+
+      .container {
+        position: relative;
+        width: 100%;
+        max-width: 900px;
+        text-align: center;
+        z-index: 10;
+      }
+
+      .header {
+        margin-bottom: 50px;
+      }
+
+      h1 {
+        font-family: "Playfair Display", serif;
+        font-size: 3.5rem;
+        background: linear-gradient(45deg, #ffd700, #daa520, #ffec8b);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 4px 20px rgba(218, 165, 32, 0.2);
+        margin-bottom: 15px;
+        letter-spacing: 1px;
+      }
+
+      .subtitle {
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 1.3rem;
+        max-width: 600px;
+        margin: 0 auto;
+        font-weight: 300;
+        line-height: 1.6;
+      }
+
+      .envelope-wrapper {
+        position: relative;
+        width: 320px;
+        height: 220px;
+        margin: 0 auto 80px;
+        perspective: 1500px;
+        cursor: pointer;
+      }
+
+      .envelope {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transform-style: preserve-3d;
+        transition: transform 0.3s ease;
+      }
+
+      .envelope-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 12px;
+        z-index: 2;
+      }
+
+      .envelope-front {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #ffd700, #daa520);
+        border-radius: 12px;
+        transform-origin: bottom;
+        transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        z-index: 4;
+        box-shadow: 0 20px 50px rgba(218, 165, 32, 0.4);
+      }
+
+      .envelope-flap {
+        position: absolute;
+        top: -50%;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg, #ffd700, #daa520);
+        border-radius: 12px 12px 0 0;
+        transform-origin: bottom;
+        transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        z-index: 3;
+        box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.2);
+      }
+
+      .envelope::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 60px;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 50%;
+        z-index: 5;
+        transition: all 0.5s ease;
+      }
+
+      .envelope:hover::before {
+        width: 70px;
+        height: 70px;
+        background: rgba(255, 255, 255, 0.25);
+      }
+
+      .card-container {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+      }
+
+      .card {
+        position: absolute;
+        width: 94%;
+        height: 94%;
+        background: linear-gradient(145deg, #ffffff, #f8f9fa);
+        border-radius: 10px;
+        left: 3%;
+        top: 3%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 25px;
+        transform: translateY(0) rotateY(0deg);
+        transition: transform 1s cubic-bezier(0.68, -0.55, 0.27, 1.55) 0.4s,
+          box-shadow 1s ease 0.4s;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        z-index: 1;
+        overflow: hidden;
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(90deg, #ffd700, #daa520);
+      }
+
+      .card-content {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s ease;
+        text-align: center;
+        z-index: 2;
+      }
+
+      .card h2 {
+        font-family: "Playfair Display", serif;
+        font-size: 2.2rem;
+        background: linear-gradient(45deg, #1a1a2e, #16213e);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 20px;
+        letter-spacing: 0.5px;
+      }
+
+      .card p {
+        color: #4a4a69;
+        font-size: 1.1rem;
+        line-height: 1.8;
+        max-width: 90%;
+        margin: 0 auto;
+      }
+
+      .heart {
+        position: absolute;
+        top: -30px;
+        color: #e74c3c;
+        font-size: 3rem;
+        opacity: 0;
+        transition: all 0.6s ease;
+        filter: drop-shadow(0 3px 5px rgba(231, 76, 60, 0.3));
+        z-index: 3;
+      }
+
+      /* Open state */
+      .open .envelope-front {
+        transform: rotateX(180deg);
+        z-index: 2; /* Lower z-index when open */
+      }
+
+      .open .envelope-flap {
+        transform: rotateX(180deg);
+        z-index: 2; /* Lower z-index when open */
+      }
+
+      .open .card {
+        transform: translateY(-100px) rotateY(10deg);
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+        z-index: 3; /* Higher z-index when open */
+      }
+
+      .open .card-content {
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 1.2s;
+      }
+
+      .open .heart {
+        opacity: 1;
+        top: -35px;
+        transition-delay: 1.5s;
+      }
+
+      /* Close button on card */
+      .close-btn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        width: 32px;
+        height: 32px;
+        background: #e74c3c;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        opacity: 0;
+        transition: all 0.3s ease;
+        z-index: 10;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .open .close-btn {
+        opacity: 1;
+        transition-delay: 1.5s;
+      }
+
+      .close-btn:hover {
+        background: #c0392b;
+        transform: scale(1.1);
+      }
+
+      /* Button */
+      .btn {
+        background: linear-gradient(45deg, #ffd700, #daa520);
+        color: #1a1a2e;
+        border: none;
+        padding: 16px 40px;
+        font-size: 1.1rem;
+        border-radius: 50px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.4s ease;
+        box-shadow: 0 8px 25px rgba(218, 165, 32, 0.4);
+        margin-top: 20px;
+        position: relative;
+        overflow: hidden;
+        z-index: 2;
+      }
+
+      .btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.4),
+          transparent
+        );
+        transition: 0.5s;
+      }
+
+      .btn:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px rgba(218, 165, 32, 0.6);
+      }
+
+      .btn:hover::before {
+        left: 100%;
+      }
+
+      .btn:active {
+        transform: translateY(2px);
+      }
+
+      .btn i {
+        margin-right: 10px;
+      }
+
+      /* Particles */
+      .particles {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+      }
+
+      .particle {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.6);
+        border-radius: 50%;
+        animation: float 15s infinite linear;
+      }
+
+      @keyframes float {
+        0% {
+          transform: translateY(0) rotate(0deg);
+          opacity: 0;
+        }
+        10% {
+          opacity: 1;
+        }
+        90% {
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(-100vh) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      /* Instructions */
+      .instructions {
+        color: rgba(255, 255, 255, 0.8);
+        margin-top: 30px;
+        font-size: 1.1rem;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0% {
+          opacity: 0.6;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0.6;
+        }
+      }
+
+      /* Responsive design */
+      @media (max-width: 768px) {
+        h1 {
+          font-size: 2.8rem;
+        }
+
+        .subtitle {
+          font-size: 1.1rem;
+        }
+
+        .envelope-wrapper {
+          width: 280px;
+          height: 190px;
+          margin-bottom: 60px;
+        }
+
+        .card h2 {
+          font-size: 1.8rem;
+        }
+
+        .card p {
+          font-size: 1rem;
+        }
+
+        .open .card {
+          transform: translateY(-160px) rotateY(10deg);
+        }
+
+        .btn {
+          padding: 14px 35px;
+          font-size: 1rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        h1 {
+          font-size: 2.3rem;
+        }
+
+        .envelope-wrapper {
+          width: 250px;
+          height: 170px;
+        }
+
+        .card {
+          padding: 20px 15px;
+        }
+
+        .open .card {
+          transform: translateY(-140px) rotateY(10deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="particles" id="particles"></div>
+
+    <div class="container">
+      <!-- <div class="header">
+        <h1>Luxury Envelope Reveal</h1>
+        <p class="subtitle">
+          Click the envelope to reveal your special message
+        </p>
+      </div> -->
+
+      <div class="envelope-wrapper" id="envelopeWrapper">
+        <div class="envelope">
+          <div class="envelope-back"></div>
+          <div class="envelope-front"></div>
+          <div class="envelope-flap"></div>
+          <div class="card-container">
+            <div class="card">
+              <div class="close-btn" id="closeBtn">
+                <i class="fas fa-times"></i>
+              </div>
+              <i class="fas fa-heart heart"></i>
+              <div class="card-content">
+                <h2>For You</h2>
+                <p>
+                  In every moment, there's beauty waiting to be discovered. Your
+                  journey is unique, and your story is worth telling. Embrace
+                  today with courage and joy.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn" id="resetBtn">
+        <i class="fas fa-redo"></i> Reset Animation
+      </button>
+      <p class="instructions">
+        Click the envelope to open, and the close button to close
+      </p>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const envelopeWrapper = document.getElementById("envelopeWrapper");
+        const resetBtn = document.getElementById("resetBtn");
+        const closeBtn = document.getElementById("closeBtn");
+        const particles = document.getElementById("particles");
+
+        // Create floating particles
+        function createParticles() {
+          const colors = [
+            "rgba(255, 215, 0, 0.7)",
+            "rgba(255, 255, 255, 0.7)",
+            "rgba(218, 165, 32, 0.7)",
+          ];
+          for (let i = 0; i < 50; i++) {
+            const particle = document.createElement("div");
+            particle.classList.add("particle");
+
+            const size = Math.random() * 8 + 2;
+            const posX = Math.random() * 100;
+            const duration = Math.random() * 20 + 10;
+            const delay = Math.random() * 5;
+            const color = colors[Math.floor(Math.random() * colors.length)];
+
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${posX}%`;
+            particle.style.animationDuration = `${duration}s`;
+            particle.style.animationDelay = `${delay}s`;
+            particle.style.backgroundColor = color;
+
+            particles.appendChild(particle);
+          }
+        }
+
+        // Open envelope on click
+        envelopeWrapper.addEventListener("click", function (e) {
+          // Only open if clicking on the envelope itself, not the card
+          if (!e.target.closest(".card")) {
+            this.classList.add("open");
+          }
+        });
+
+        // Close envelope
+        closeBtn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          envelopeWrapper.classList.remove("open");
+        });
+
+        // Reset animation
+        resetBtn.addEventListener("click", function () {
+          envelopeWrapper.classList.remove("open");
+        });
+
+        // Initialize particles
+        createParticles();
+      });
+    </script>
+  </body>
+</html>
